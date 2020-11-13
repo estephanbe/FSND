@@ -98,3 +98,139 @@ createdb trivia_test
 psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
+
+## Endpoints
+
+GET '/categories'
+
+- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+- Request Arguments: None
+- Returns: An object with a single key, categories, that contains a object of id: category_string key: value pairs. 
+{'1' : "Science",
+'2' : "Art",
+'3' : "Geography",
+'4' : "History",
+'5' : "Entertainment",
+'6' : "Sports"}
+- 404 will be returned if not found
+
+
+
+POST '/category'
+
+- Create a new category.
+- Request Arguments: cat_type (the category name)
+- Returns: An object with a single key: "success" with an object value: Boolean.
+
+- 422 will be returned if any error happened
+
+
+
+GET '/questions'
+
+- Fetches a dictionary of questions and some information to help with using those questions list.
+
+- Request Arguments: None
+
+- Returns: An object with multiple keys as following:
+
+  ​	{
+
+  ​		'questions' : [
+
+  ​									{
+
+  ​											'id': (int) question_id,
+
+  ​											'question': (str) question,
+
+  ​											'answer': (str) answer,
+
+  ​											'category': (int) the_question_associated_category_id,
+
+  ​											'difficulty': (int) the_question_difficulty
+
+  ​									}
+
+  ​								],
+  ​		'total_questions' : (int) total_questions_in_database,
+  ​		'current_category' : Null,
+  ​		'categories' : [
+
+  ​									{
+
+  ​											'id': (int) category_id,
+
+  ​											'type': (str) category_name,
+
+  ​									}
+
+  ​								]
+
+  ​	}
+
+- 404 will be returned if not found
+
+
+
+DELETE '/questions/<id>'
+
+- Deletes a question using its <id>
+
+- Request Arguments: None
+
+- Returns: An object with multiple keys as following:
+
+  ​	{
+
+  ​		"success": Boolean,
+
+     	 "deleted": (int) the_deleted_question_id
+
+  ​	}
+
+- 422 will be returned if any error happened
+
+
+
+POST '/questions'
+
+- Used to create a new question or to search for questions. The endpoint use depends on the provided arguments. 
+- Request Arguments: 
+  - To create new post: question, answer, difficulty, category
+  - To search for a question: searchTerm
+- Returns: An object with multiple keys depending on the arguments:
+  - If new question was created: {"success": Boolean, "question_id": (int) the_created_question_id}
+  - If searchTerm was provided: {"questions": (array) list_of_questions, "totalQuestions": (int) total_of_questions, "currentCategory": Null}
+
+- 422 will be returned if any error happened
+
+GET '/categories/<cat_id>/questions'
+
+- Fetches a dictionary of questions associated with specific category based on its <cat_id>.
+
+- Request Arguments: None
+
+- Returns: An object with multiple keys as following:
+
+  {
+
+  ​	"questions": list_of_questions,
+
+  ​    "total_questions": (int) total_questions,
+
+  ​    "current_category": (int) cat_id,
+
+  }
+
+- 404 will be returned if not found.
+
+  
+
+POST '/quizzes'
+
+- Return a random question from the total question within a given category, if provided.
+- Request Arguments: previous_questions (the questions which were chosen last) & quiz_category (the category which the question will be picked from, if not provided the question will be from all the categories)
+- Returns: An object with a single key: "question" with an object value: the question.
+
+- 422 will be returned if any error happened
