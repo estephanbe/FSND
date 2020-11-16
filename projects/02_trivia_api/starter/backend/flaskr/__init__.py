@@ -6,6 +6,8 @@ from flask_cors import CORS
 import random
 import sys
 
+from sqlalchemy.sql.elements import Null
+
 from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
@@ -262,11 +264,18 @@ def create_app(test_config=None):
     for q in formated_questions:
       if q["id"] not in previous_questions:
         eligible_questions.append(q["id"])
-    choosen_question_id = random.choice(eligible_questions)
-    choosen_question = Question.query.filter(Question.id == choosen_question_id).one_or_none()
-    body = {
-      "question": choosen_question.format()
-    }
+    
+    if 0 < len(eligible_questions):
+      choosen_question_id = random.choice(eligible_questions)
+      choosen_question = Question.query.filter(Question.id == choosen_question_id).one_or_none()
+      body = {
+        "question": choosen_question.format()
+      }
+    else:
+      body = {
+        "question": None
+      }
+    
 
     return jsonify(body)
 
